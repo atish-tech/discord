@@ -15,7 +15,10 @@ interface NavigationItemProps {
 export const NavigationItem = ({ id, imageUrl, name }: NavigationItemProps) => {
     const params = useParams();
     const router = useRouter();
-    // console.log(imageUrl);
+    
+    const onClick = () => {
+        router.push(`/servers/${id}`);
+    }
 
     return (
         <ActionTooltip
@@ -24,7 +27,7 @@ export const NavigationItem = ({ id, imageUrl, name }: NavigationItemProps) => {
             label={name}
         >
             <button
-                onClick={() => { }}
+                onClick={onClick}
                 className="group relative flex items-center"
             >
                 <div className={cn(
@@ -37,7 +40,7 @@ export const NavigationItem = ({ id, imageUrl, name }: NavigationItemProps) => {
                     params?.serverId === id && "bg-primary/10 text-primary rounded-[16px]"
                 )}>
                     {/* <Image fill src={imageUrl}  alt="server" /> */}
-                    <img src={imageUrl} />
+                    <img src={imageUrl} className="w-full object-cover " />
                 </div>
 
             </button>
