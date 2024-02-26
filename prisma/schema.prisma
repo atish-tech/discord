@@ -6,16 +6,16 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model Profile {
-  id String @id @default(uuid())
-  userId String @unique
-  name String
+  id       String @id @default(uuid())
+  userId   String @unique
+  name     String
   imageUrl String @db.Text
-  email String @db.Text
+  email    String @db.Text
 
   servers Server[]
   members Member[]
@@ -26,13 +26,13 @@ model Profile {
 }
 
 model Server {
-  id String @id @default(uuid())
-  name String
-  imageUrl String @db.Text
-  inviteCode String @db.Text
+  id         String @id @default(uuid())
+  name       String
+  imageUrl   String @db.Text
+  inviteCode String @unique
 
   profileId String
-  profile Profile @relation(fields: [profileId] , references: [id] , onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   members Member[]
   chanels Chanel[]
@@ -44,20 +44,20 @@ model Server {
 }
 
 enum MemberRole {
-  AADMIN  
+  AADMIN
   MODERATOR
   GUEST
 }
 
 model Member {
-  id String @id @default(uuid())
+  id   String     @id @default(uuid())
   role MemberRole @default(GUEST)
 
   profileId String
-  profile Profile @relation(fields: [profileId] , references: [id] , onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
-  server Server @relation(fields: [serverId] , references: [id] , onDelete: Cascade)
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -73,15 +73,15 @@ enum ChanelType {
 }
 
 model Chanel {
-  id String @id @default(uuid())
+  id   String     @id @default(uuid())
   name String
   type ChanelType @default(TEXT)
 
   profileId String
-  profile Profile @relation(fields: [profileId] , references: [id] , onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  serverId String 
-  server Server @relation(fields: [serverId] , references: [id] , onDelete: Cascade)
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
