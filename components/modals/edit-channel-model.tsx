@@ -74,6 +74,7 @@ export const EditChannelModal = () => {
                 }
             })
             await axios.patch(url, values);
+             
             
             form.reset();
             rouer.refresh();
