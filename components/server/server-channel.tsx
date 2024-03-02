@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { cn } from "@/lib/utils";
 import { Chanel, ChanelType, MemberRole, Server } from "@prisma/client";
@@ -11,6 +11,7 @@ interface ServerChannelProps {
   channel: Chanel;
   server: Server;
   role?: MemberRole;
+  key : string;
 }
 
 const icon = {
@@ -19,7 +20,7 @@ const icon = {
   [ChanelType.VIDEO]: Video,
 };
 
-export const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
+export const ServerChannel = ({ channel, server, role , key}: ServerChannelProps) => {
   const Icon = icon[channel.type];
   const params = useParams();
   const router = useRouter();
@@ -35,6 +36,7 @@ export const ServerChannel = ({ channel, server, role }: ServerChannelProps) => 
   }
   return (
     <button
+    key={key}
     onClick={onClick}
       className={cn(
         "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
