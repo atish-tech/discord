@@ -1,9 +1,9 @@
+"use client"
 import { useModal } from "@/hooks/use-modal-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, MemberRole, Profile } from "@prisma/client";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams , useRouter} from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -42,7 +42,7 @@ const formSchemea = z.object({
   content: z.string().min(1),
 });
 
-const formSchema = ({
+export const ChatItem = ({
   id,
   content,
   member,
@@ -60,7 +60,9 @@ const formSchema = ({
   const router = useRouter();
 
   const onMemberClick = () => {
+    
     if (member.id === currentMember.id) {
+      console.log("clicked");
       return;
     }
 
@@ -75,7 +77,7 @@ const formSchema = ({
     };
 
     window.addEventListener("keydown", handelKeyDown);
-    return () => window.removeEventListener("keydown", handelKeyDown);
+    return () => window.removeEventListener("keyDown", handelKeyDown);
   }, []);
 
   const form = useForm<z.infer<typeof formSchemea>>({
@@ -85,6 +87,8 @@ const formSchema = ({
     },
   });
 
+  
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchemea>) => {
@@ -93,6 +97,9 @@ const formSchema = ({
         url: `${socketUrl}/${id}`,
         query: socketQuery,
       });
+
+      console.log("url",url);
+      
 
       await axios.patch(url, values);
 
@@ -193,7 +200,7 @@ const formSchema = ({
             <Form {...form}>
               <form
                 className="flex items-center w-full gap-x-2 pt-2"
-                onClick={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmit)}
               >
                 <FormField
                   control={form.control}
@@ -217,7 +224,7 @@ const formSchema = ({
                   Save
                 </Button>
               </form>
-              <span>Press escape to cancel, enter to save</span>
+              <span className="text-[10px] mt-1 text-zinc-400">Press escape to cancel, enter to save</span>
             </Form>
           )}
         </div>
@@ -234,12 +241,12 @@ const formSchema = ({
           )}
           <ActionTooltip label="Delete">
             <Trash
-              //   onClick={() =>
-              //     onOpen("deleteMessage", {
-              //       apiUrl: `${socketUrl}/${id}`,
-              //       query: socketQuery,
-              //     })
-              //   }
+                onClick={() =>
+                  onOpen("deleteMessage", {
+                    apiUrl: `${socketUrl}/${id}`,
+                    query: socketQuery,
+                  })
+                }
               className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
             />
           </ActionTooltip>
