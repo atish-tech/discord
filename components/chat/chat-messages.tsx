@@ -104,7 +104,7 @@ export const ChatMessage = ({
               Load previous messages
             </button>
           )}
-        </div>
+        </div> 
       )}
       <div className="flex flex-col-reverse mt-auto">
         {data?.pages?.map((group, i) => (
