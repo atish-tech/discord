@@ -2,7 +2,7 @@
 import { useModal } from "@/hooks/use-modal-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, MemberRole, Profile } from "@prisma/client";
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import { DotIcon, Edit, FileIcon, Loader, LoaderIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import { useParams , useRouter} from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -58,6 +58,7 @@ export const ChatItem = ({
   const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
+  const [givenContent , setGivenContent] = useState(content);
 
   const onMemberClick = () => {
     
@@ -96,14 +97,16 @@ export const ChatItem = ({
       const url = qs.stringifyUrl({
         url: `${socketUrl}/${id}`,
         query: socketQuery,
-      });
-
-      console.log("url",url);
-      
+      });      
 
       await axios.patch(url, values);
 
-      form.reset();
+      // form.reset();
+      // content = form.getValues("content")
+      // console.log("content", content);
+      // console.log("form value",);
+      
+      setGivenContent(form.getValues("content"))
       setIsEditing(false);
     } catch (error) {
       console.log(error);
@@ -188,7 +191,7 @@ export const ChatItem = ({
                   "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
               )}
             >
-              {content}
+              {givenContent}
               {isUpdated && !deleted && (
                 <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
                   (edited)
@@ -221,7 +224,7 @@ export const ChatItem = ({
                   )}
                 />
                 <Button disabled={isLoading} size="sm" variant="primary">
-                  Save
+                  {isLoading ? <Loader className="animate-spin" /> : "Save"}
                 </Button>
               </form>
               <span className="text-[10px] mt-1 text-zinc-400">Press escape to cancel, enter to save</span>
