@@ -19,7 +19,7 @@ const nextConfig = {
         ignoreBuildErrors: true,
       },
     images: {
-        domains: ["uploadthing.com" , "utfs.io"]
+        domains: ["uploadthing.com" , "utfs.io" , "clerk.com" , "img.clerk.com"]
     }
 };
 
