@@ -108,6 +108,7 @@ export const InitialModel = () => {
                             )} />
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
+                        <Button onClick={() => rouer.push("/servers/availible")} variant={"destructive"} disabled={isLoading}>Skip</Button>
                             <Button variant={"primary"} disabled={isLoading}>Create</Button>
                         </DialogFooter>
                     </form>
