@@ -8,16 +8,21 @@ export const MobileToggle = ({serverId} : {serverId : string}) => {
     
     return (
         <Sheet>
-            <SheetTrigger asChild>
+            <SheetTrigger>
                 <Button variant={"ghost"} size="icon" className="md:hidden">
                     <Menu />
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 flex gap-0">
-                <div className="w-[72px]">
-                    <NavigationSidebar />
-                </div>
+                {/* <div> */}
+                {/* <div className="w-[72px]"> */}
+                    {/* <NavigationSidebar /> */}
+                {/* </div> */}
+                {/* <NavigationSidebar /> */}
+                {/* <ServerSidebar serverId={serverId} /> */}
+
                 <ServerSidebar serverId={serverId} />
+                {/* </div> */}
             </SheetContent>
         </Sheet>
     )

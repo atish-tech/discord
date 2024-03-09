@@ -41,7 +41,7 @@ const ServerIdLayout = async ({
     <div className="h-full">
       {/* <ResizablePanelGroup direction="horizontal"> */}
       {/* <ResizablePanel> */}
-      <div className="hidden md:flex h-auto  w-60 z-20 fixed flex-col inset-y-0">
+      <div className="hidden md:flex h-full w-60 z-20 fixed flex-col inset-y-0">
         <ServerSidebar serverId={params.serverId} />
       </div>
       {/* </ResizablePanel> */}

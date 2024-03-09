@@ -75,12 +75,12 @@ export const ServerSidebar = async ({ serverId }: ServerSideBarProps) => {
   if (!server) {
     return redirect("/");
   }
-  // console.log(server);
+  // console.log("server" , server);
 
   return (
-    <div className="hidden md:flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
+    <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
       <ServerHeader server={server} role={role} />
-      <ScrollArea>
+      <ScrollArea> 
         <div className="mt-2">
           <ServerSearch
             data={[
@@ -126,7 +126,7 @@ export const ServerSidebar = async ({ serverId }: ServerSideBarProps) => {
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
 
         {/* Text Channel */}
-        {!!textChanel?.length && (
+        {!!textChanel?.length && ( 
           <div className="mb-3 px-3">
             <ServerSection
               sectionType="channels"
