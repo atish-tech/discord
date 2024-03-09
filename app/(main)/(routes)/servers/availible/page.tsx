@@ -13,10 +13,11 @@ export const AvalilbleServerPage = async () => {
 
   return (
     <div className="h-screen w-full py-5 flex overflow-auto items-center justify-center gap-5 flex-wrap">
-      <div className="w-full xs:flex flex justify-around md:hidden  ">
-        <MobileToggleItems />
-
-        <p className=" text-xl  text-green-100">Available Server</p>
+      <div className="md:hidden w-full flex justify-around   ">
+        <div className="md:hidden">
+          <MobileToggleItems />
+        </div>
+        <p className="md:hidden text-xl  text-green-100">Available Server</p>
       </div>
       {servers.map((server) => (
         <div key={server.id} className="w-[350px] h-fit">

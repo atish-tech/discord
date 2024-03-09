@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import React, { use } from "react";
 import { useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 interface AvailibleServerCartProps {
   server: Server & { profile: Profile };
@@ -31,7 +32,9 @@ export const AvailibleServerCart = ({ server }: AvailibleServerCartProps) => {
         </div>
 
         <div className="">
-          <p className="text-zinc-100 text-xl">{server.name}</p>
+        
+          {server.name == "Owner" && <Badge variant={"default"} className="bg-emerald-600 text-white border-none" >Recommended</Badge>} 
+          <p className="text-zinc-100 text-xl">{server.name}  </p>
           <p className="text-zinc-400 text-xs">{date}</p>
           <button className="mt-4 py-1 px-5 bg-green-400 rounded-3xl " onClick={() => router.push(`/invite/${server.inviteCode}`)}>
             Join

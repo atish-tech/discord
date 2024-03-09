@@ -4,7 +4,8 @@ import { Button } from "./ui/button"
 import { NavigationSidebar } from "./navigation/navigation-sidebar"
 import { ServerSidebar } from "./server/server-sidebar"
 
-export const MobileToggle = ({serverId = ""} : {serverId : string}) => {
+export const MobileToggle = ({serverId} : {serverId : string}) => {
+    
     return (
         <Sheet>
             <SheetTrigger asChild>
