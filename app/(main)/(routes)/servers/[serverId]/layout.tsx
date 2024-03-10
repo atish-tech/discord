@@ -39,17 +39,26 @@ const ServerIdLayout = async ({
 
   return (
     <div className="h-full">
-      {/* <ResizablePanelGroup direction="horizontal"> */}
-      {/* <ResizablePanel> */}
-      <div className="hidden md:flex h-full w-60 z-20 fixed flex-col inset-y-0">
-        <ServerSidebar serverId={params.serverId} />
+      <div className="hidden sm:flex sm:flex-col w-full h-full">
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel>
+            {/* <div className="hidden md:flex h-full md:w-auto w-60 z-20 fixed flex-col inset-y-0"> */}
+            <ServerSidebar serverId={params.serverId} />
+            {/* </div> */}
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel>
+            <main className="h-full w-auto">{children}</main>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-      {/* </ResizablePanel> */}
-      {/* <ResizableHandle withHandle /> */}
-      {/* <ResizablePanel> */}
-      <main className="h-full md:pl-60">{children}</main>
-      {/* </ResizablePanel> */}
-      {/* </ResizablePanelGroup> */}
+
+      {/* <div className="md:hidden flex h-full"> */}
+      {/* <div className="hidden md:flex h-full w-60 z-20 fixed flex-col inset-y-0"> */}
+      {/* <ServerSidebar serverId={params.serverId} /> */}
+      {/* </div> */}
+      <div className="h-full w-full md:hidden">{children}</div>
+      {/* </div> */}
     </div>
   );
 };

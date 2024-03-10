@@ -49,6 +49,9 @@ const MemberIdPage = async ({params , searchParams } : MemberIdPageProps) => {
 
   const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
+  // console.log("conversation" , conversation);
+  
+
   return (
     <div className='bg-white dark:bg-[#313338] flex flex-col h-full'>
       <ChatHeader 

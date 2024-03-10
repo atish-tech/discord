@@ -68,21 +68,36 @@ export default async function handler(
         if(!member) {
             return res.status(404).json({message : "Member not found"});
         }
-
-        const message = await db.message.create({
-            data: {
-                content , fileUrl ,
-                channelId : conversationId as string,
-                memberId: member.id,
-            },
-            include: {
-                member: {
-                    include: {
-                        profile: true,
-                    }
-                }
+        
+        // const message = await db.message.create({
+        //   data: {
+        //         content , fileUrl ,
+        //         channelId : conversationId as string,
+        //         memberId: member.id,
+        //     },
+        //     include: {
+        //         member: {
+        //             include: {
+        //                 profile: true,
+        //             }
+        //         }
+        //     }
+        // });
+        const message = await db.directMessage.create({
+          data:{
+            content, fileUrl,
+            memberId: member.id,
+            // channelId: conversationId as string
+            conversationId : conversationId as string
+          },
+          include:{
+            member: {
+              include: {
+                profile: true
+              }
             }
-        });
+          }
+        })
 
         const channelKey = `chat:${conversationId}:messages`;
 
