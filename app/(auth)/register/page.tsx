@@ -1,10 +1,12 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner"
-import {set, z} from "zod"
+import {z} from "zod";
+import axios from "axios";
 
 const inputSchema = z.object({
     userName: z.string().min(3 , {message: "UserName must be atlist 3 charecter"}),
@@ -23,17 +25,21 @@ export default function () {
     // Handle Subbmit
     const onSubbmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const temp = inputSchema.safeParse(data);
+        // const temp = inputSchema.safeParse(data);
         
-        if(!temp.success) {
-            toast(temp.error.errors[0].message);
-            return;
-        }
+        // if(!temp.success) {
+        //     toast(temp.error.errors[0].message);
+        //     return;
+        // }
 
         try {
             setLoading(true);
+            const response = await axios.post("api/auth/register" , {...data});
+            console.log(response);
             
+
         } catch (error) {
+            console.log(error);
             
         }finally{
             setLoading(false);
@@ -52,7 +58,9 @@ export default function () {
                 <Input onChange={inputHandler} type="text" name="userName" placeholder="Username" className="w-full h-10 bg-zinc-700/50 rounded-lg border-0 p-2" />
                 <Input onChange={inputHandler} type="email" name="email" placeholder="Email" className="w-full h-10 bg-zinc-700/50 rounded-lg border-0 p-2" />
                 <Input onChange={inputHandler} type="password" name="password" placeholder="Password" className="w-full h-10 bg-zinc-700/50 rounded-lg focus:border-1 border-0 p-2" />
-                <Button type="submit" variant="secondary" className="ml-auto">Register</Button>  
+                <Button disabled={loading} type="submit" variant="secondary" className="ml-auto disabled:cursor-not-allowed">
+                    {loading ? <Loader className="animate-spin" /> : "Register"}
+                    </Button>  
             </form>
             <p>Already have a account? <Link className="text-green-300" href={"login"}>login</Link> </p>
         </div>
