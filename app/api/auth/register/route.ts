@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { DB } from "@/lib/prisma";
 import bcryptjs from "bcryptjs";
-import { NextApiRequest, NextApiResponse } from "next";
-import { any } from "zod";
 import { StatusCode } from "@/lib/status";
-import { sendOtp, verifyEmail } from "@/components/auth/email";
+import { verifyEmail } from "@/components/auth/email";
+import { cookies } from "next/headers";
+import { getToken } from "@/config/generateToken";
+import { JwtPayload } from "jsonwebtoken";
 
 interface RequestBody {
   userName: string;
@@ -13,7 +13,7 @@ interface RequestBody {
   password: string;
 }
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request , res:Response) {
   const data = await req.json();
 
   const { userName, email, password }: RequestBody = data;
@@ -25,28 +25,39 @@ export async function POST(req: Request, res: NextApiResponse) {
   const origin = crediencial.origin;
 
 
-  const userData = await DB.users.findFirst({
+  const userData = await DB.user.findFirst({
     where: { OR: [{ email }, { userName }] },
   });
 
   // login
   if (type === "login") {
     if (!userData)
-      return new NextResponse("Email and userName not exist", {
+      return new NextResponse("Email not exist", {
         status: StatusCode.BadRequest,
       });
 
-    else if (userData?.userName === userName || userData?.email === email) {
+    else if (userData?.email === email) {
 
+      // Check Password
       if (!(await bcryptjs.compare(password, userData?.password)))
         return new NextResponse("Incorrect password", {
           status: StatusCode.BadRequest,
         });
 
-      else
+        // check user verivied or not
+      else if (!userData.isVerified) {
+        return new NextResponse("Email Not verified", { status: StatusCode.BadRequest });
+      }
+
+      //  login procedure
+      else {
+        const token = await getToken(userData.email)
+        cookies().set("token" , token);
+        
         return new NextResponse("Login Success", {
           status: StatusCode.Success,
         });
+      }
     }
 
     else if (userData?.userName !== userName)
@@ -64,8 +75,8 @@ export async function POST(req: Request, res: NextApiResponse) {
   if (type === "register") {
     if (userData) {
       if (!userData?.isVerified) {
-        verifyEmail(userData.email , origin);
-        return new NextResponse("varification link send to your register email " , {status : StatusCode.Success});
+        verifyEmail(userData.email, origin);
+        return new NextResponse("Varification link send to your register email", { status: StatusCode.Success });
       }
       if (userData?.userName == userName)
         return new NextResponse("User Name already exist", { status: 400 });
@@ -80,12 +91,13 @@ export async function POST(req: Request, res: NextApiResponse) {
     );
 
     // create entry in Database
-    const response = await DB.users.create({
+    const response = await DB.user.create({
       data: { userName, email, password: hashPassword },
     });
 
-    // send otp
-    // sendOtp(123456);
-    return NextResponse.json(response);
+    // send email
+    verifyEmail(response.email, origin);
+
+    return NextResponse.json("Registration Success , Please verify your email", { status: StatusCode.Created });
   }
 }
