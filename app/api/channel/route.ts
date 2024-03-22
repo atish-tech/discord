@@ -51,7 +51,7 @@ export async function POST(req: Request) {
                 }
             },
             data: {
-                channels:{
+                channels:{ 
                     create: {
                         name: name,
                         type: type
