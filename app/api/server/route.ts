@@ -1,12 +1,64 @@
+import { decodeToken } from "@/config/decodeToken";
+import { DB } from "@/lib/prisma";
 import { StatusCode } from "@/lib/status";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
+import { MemberRole } from "@prisma/client";
 
-export async function POST(req:Request) {
-    const token = cookies().get("token")?.value;
+const ServerInputSchema = z.object({
+    name: z.string().min(2, { message: "Name Must be at list 2 charecter long" }),
+    imageUrl: z.string().min(2, { message: "Image url is missing" }),
+})
 
-    // console.log(token);
-    
+export async function POST(req: Request) {
+    try {
+        const token = cookies().get("token")?.value || " ";
 
-    return new NextResponse("Server Created" , {status : StatusCode.Created});
+        if (!token) return new NextResponse("Bad Request", { status: StatusCode.BadRequest });
+
+        const email = await decodeToken(token);
+
+        const body = await req.json();
+
+        const user = await DB.user.findFirst({ where: { email } });
+
+        // Validate User
+        if (!user) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        // validate body
+        const verifiedBody = ServerInputSchema.safeParse(body);
+        if (!verifiedBody.success) {
+            return new NextResponse(verifiedBody.error.errors[0].message, { status: StatusCode.BadRequest });
+        }
+
+        const { name, imageUrl } = body;
+
+        const server = await DB.server.create({
+            data: {
+                name, imageUrl,
+                adminId: user?.id,
+                inviteCode: uuidv4(),
+                members: {
+                    create: [
+                        { userId: user.id, role: MemberRole.ADMIN }
+                    ]
+                },
+                channels: {
+                    create: [
+                        { name: "General", userId: user.id }
+                    ]
+                }
+            }
+        });
+
+        return NextResponse.json(server);
+    } catch (error) {
+        console.log(error);
+        return new NextResponse("server error", { status: StatusCode.BadRequest });
+
+    }
 }

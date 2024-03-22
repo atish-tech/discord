@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decodeToken } from "./config/decodeToken";
 import { redirect } from "next/navigation";
+import { StatusCode } from "./lib/status";
+import { DB } from "./lib/prisma";
 
 export async function middleware(request: NextRequest) {
     // if(request.nextUrl.pathname.startsWith("/login") && ! request.nextUrl.pathname.startsWith("/register")) {
@@ -16,10 +18,11 @@ export async function middleware(request: NextRequest) {
 
     }
     else {
-        console.log(email);
-
+        // const user = await DB.user.findFirst({where: {email}});
+        // console.log(user);
+        // request.email = email;
     }
-    console.log(email);
-
+    // console.log(email);
+    // return new NextResponse("User Unothrized" , {status: StatusCode.BadRequest});
     // }
 }

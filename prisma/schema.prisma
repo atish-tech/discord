@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   userName String @unique
   email String @unique 
   password String
@@ -22,7 +22,6 @@ model User {
 
   servers Server[]
   members Member[]
-  channelMessage ChannelMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,17 +31,16 @@ model Server {
   id String @id @default(uuid())
   name String
   imageUrl String @db.Text
-  inviteCode String @unique
+  inviteCode String @unique 
+  adminId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  adminId Int
   users User @relation(fields: [adminId] , references: [id] , onDelete: Cascade)
 
   channels Channel[]
   members Member[]
-  channelMessage ChannelMessage[]
 
   @@index([adminId])
 }
@@ -77,7 +75,7 @@ enum MemberRole {
 
 model Member {
   id Int @id @default(autoincrement())
-  userId Int
+  userId String
   serverId String
   role MemberRole @default(GUEST)
 
@@ -87,6 +85,8 @@ model Member {
   user User @relation(fields: [userId] , references: [id] , onDelete: Cascade)
   server Server @relation(fields: [serverId] , references: [id] , onDelete: Cascade)
 
+  channelMessage ChannelMessage[]
+
   @@index([userId])
   @@index([serverId])
 }
@@ -95,15 +95,15 @@ model ChannelMessage {
   id String @id @default(uuid())
   content String @db.Text
   fileUrl String? @db.Text
+  memberId Int
+  channelId Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId Int
-  serverId String
-  channelId Int
-
-  users User @relation(fields: [userId] , references: [id] , onDelete: Cascade)
-  server Server @relation(fields: [serverId] , references: [id] , onDelete: Cascade)
+  members Member @relation(fields: [memberId] , references: [id] , onDelete: Cascade)
   channel Channel @relation(fields: [channelId] , references: [id] , onDelete: Cascade)
 
+  @@index([channelId])
+  @@index([memberId])
 }
