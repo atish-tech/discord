@@ -47,7 +47,7 @@ export async function POST(req: Request) {
                         role: {
                             in:[MemberRole.ADMIN , MemberRole.MODERATOR]
                         }
-                    }
+                    } 
                 }
             },
             data: {
